@@ -1,0 +1,14 @@
+# Example from https://stackoverflow.com/a/16537996
+
+$documents_path = 'C:\Users\user\Documents\blahblahblah'
+$word_app = New-Object -ComObject Word.Application
+
+# This filter will find .doc as well as .docx documents
+Get-ChildItem -Path $documents_path -Filter *.doc? -Recurse | ForEach-Object {
+    $document = $word_app.Documents.Open($_.FullName)
+    $pdf_filename = "$($_.DirectoryName)\$($_.BaseName).pdf"
+    $document.SaveAs([ref] $pdf_filename, [ref] 17)
+    $document.Close()
+}
+
+$word_app.Quit()
